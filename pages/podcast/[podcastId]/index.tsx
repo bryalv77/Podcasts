@@ -66,7 +66,7 @@ export const Podcast: FC = () => {
           isLoading={isLoading}
         />
         <div className='layout'>
-          <section className='podcast'>
+          <div className='podcast'>
             <CardFull
               podcastId={podcastId?.toString() || ''}
               name={podcast ? podcast['im:name'].label : ''}
@@ -74,10 +74,10 @@ export const Podcast: FC = () => {
               author={podcast ? podcast['im:artist'].label : ''}
               description={podcast ? podcast.summary.label : ''}
             />
-          </section>
+          </div>
           {
             podcastList && podcastList.length > 0 && (
-              <div>
+              <div className='list'>
                 <h2 className='title'>{`Episodes: ${podcastList.length}`}</h2>
                 <PodcastTable
                   podcastList={podcastList}
@@ -90,10 +90,10 @@ export const Podcast: FC = () => {
       </main>
       <style jsx>{`
         .layout {
-          display: grid;
-          grid-template-columns: repeat(2, auto);
-          grid-gap: 3rem;
-          margin: 1rem 0;
+          display: flex;
+          flex-direction: row;
+        }
+        .podcast {
         }
         .title {
           box-shadow: 0 0 10px rgba(0,0,0,0.1);
@@ -101,13 +101,23 @@ export const Podcast: FC = () => {
           margin: 0 0 1rem 0;
           border-radius: 0.5rem;
         }
+        .list {
+          width: 100%;
+          max-width: calc(100% - 20rem);
+          display: flex;
+          flex-direction: column;
+        }
         @media (max-width: 768px) {
           .podcast {
             display: flex;
             justify-content: center;
           }
           .layout {
-            grid-template-columns: 1fr;
+            flex-direction: column;
+            flex-wrap: wrap;
+          }
+          .list {
+            max-width: 100%;
           }
         }
       `}</style>

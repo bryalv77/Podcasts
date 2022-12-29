@@ -6,28 +6,19 @@
 }
 
 .cell--title {
-  width: calc(100% - 11.25rem);
+  width: 60%;
 }
-
 .cell--title__text {
   color: var(--primary-color);
 }
 
 .cell {
   text-align: center;
-  width: 5.625rem;
+  width: 20%;
 }
 
 @media (max-width: 768px) {
   .row {
-    font-size: 0.8rem;
-  }
-
-  .cell--title {
-    width: calc(100% - 140rem);
-  }
-
-  .cell {
-    width: 70rem;
+    font-size: 0.6rem;
   }
 }

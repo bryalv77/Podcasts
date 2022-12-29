@@ -8,7 +8,9 @@ export const formatDate = (date: string) => {
   const month = dateObj.getMonth() + 1;
   const day = dateObj.getDate();
   const year = dateObj.getFullYear();
-  return `${day}/${month}/${year}`;
+  const dayToPrint = day < 10 ? `0${day}` : day;
+  const monthToPrint = month < 10 ? `0${month}` : month;
+  return `${dayToPrint}/${monthToPrint}/${year}`;
 };
 
 export const formatMillis = (duration: number) => {

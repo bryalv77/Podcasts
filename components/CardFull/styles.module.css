@@ -3,6 +3,7 @@
   flex-direction: column;
   justify-content: flex-start;
   padding: 1rem;
+  margin-right: 3rem;
   border-radius: 0.5rem;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease;
@@ -48,4 +49,11 @@
   font-weight: bold;
   font-style: normal;
   margin-bottom: 0.5rem;
+}
+
+@media (max-width: 768px) {
+  .card {
+    margin-right: 0;
+    margin-bottom: 3rem;
+  }
 }

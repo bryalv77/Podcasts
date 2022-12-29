@@ -4,15 +4,16 @@
   border-radius: 0.5rem;
 }
 
-.th--title {
+.title {
   font-weight: bold;
   color: #000;
-  width: calc(100% - 11.25rem);
+  width: 60%;
 }
 
-.th--cell {
+.cell {
   font-weight: bold;
-  width: 5.625rem;
+  width: 20%;
+  text-align: center;
 }
 
 .row {
@@ -25,14 +26,6 @@
 
 @media (max-width: 768px) {
   .row {
-    font-size: 0.8rem;
-  }
-
-  .th--title {
-    width: calc(100% - 140rem);
-  }
-
-  .th--cell {
-    width: 70rem;
+    font-size: 0.6rem;
   }
 }

@@ -5,9 +5,9 @@ import PodcastRow from './PodcastRow';
 const PodcastTable: FC<{ podcastList: any, podcastId: string }> = ({ podcastList, podcastId }) => (
   <section className={styles.table}>
     <div className={styles.row}>
-      <div className={styles['th--title']}>Title</div>
-      <div className={styles['th--cell']}>Date</div>
-      <div className={styles['th--cell']}>Duration</div>
+      <div className={styles.title}>Title</div>
+      <div className={styles.cell}>Date</div>
+      <div className={styles.cell}>Duration</div>
     </div>
     {
       podcastList.map((podcast: any, index: number) => (
