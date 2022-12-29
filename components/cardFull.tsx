@@ -1,18 +1,24 @@
 /* eslint-disable @next/next/no-img-element */
 
+import Link from 'next/link';
 import { FC } from 'react'
 import {rem} from '../utils';
 const Card: FC<{
   name: string, 
   author: string, 
   description: string, 
-  image: string
-}> = ({name, author, description, image}) => {
+  image: string,
+  podcastId: string
+}> = ({name, author, description, image, podcastId}) => {
   return (
     <>
      <div className="card">
         <img className='card--image' src={image} alt={name} />
-        <h4 className='card--title'>{name}</h4>
+        <h4 className='card--title'>
+          <Link href={`/podcast/${podcastId}`} className="link">
+            <div className="card--title__text">{name}</div>
+          </Link>
+        </h4>
         <h4 className='card--subtitle'>{`by ${author}`}</h4>
         <p className="card--description">
           <span className='card--description__title'>Description:</span><br /><br />
@@ -37,6 +43,9 @@ const Card: FC<{
         .card--title {
           font-weight: bold;
           margin: 0;
+        }
+        .card--title__text {
+          color: #000000;
         }
         .card--subtitle {
           font-style: italic;

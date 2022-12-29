@@ -8,16 +8,19 @@ import Card from '../components/card';
 import Link from 'next/link';
 import { rem, PODCASTS_LIST_URL_API } from '../utils';
 import Textfield from '../components/textfield';
+import Loader from '../components/loader';
 
 
 export default function Podcasts() {
   const [podcasts, setPodcasts]:any = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [searchText, setSearchText]:any = useState('');
   
   useEffect(() => {
     const fetchData = async () => {
-      if (localStorage.podcasts || localStorage.lastUpdatePodcasts > Date.now() - 1000 * 60 * 60 * 24) {
+      if (localStorage.podcasts && Date.now() - localStorage.lastUpdatePodcasts <= 1000 * 60 * 60 * 24) {
         setPodcasts(JSON.parse(localStorage.podcasts));
+        setIsLoading(false);
         return;
       }
       const result = await axios.get(PODCASTS_LIST_URL_API);
@@ -25,6 +28,7 @@ export default function Podcasts() {
       setPodcasts(entry);
       localStorage.podcasts = JSON.stringify(entry);
       localStorage.lastUpdatePodcasts = Date.now();
+      setIsLoading(false);
     };
 
     fetchData();
@@ -48,6 +52,9 @@ export default function Podcasts() {
       <Head>
         <title>Podcaster</title>
       </Head>
+      {
+        isLoading && <Loader />
+      }
       <main className="main">
         <Title title="Podcaster" />
         <Separator />

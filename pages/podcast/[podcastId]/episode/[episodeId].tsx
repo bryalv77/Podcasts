@@ -1,42 +1,35 @@
 /* eslint-disable @next/next/no-img-element */
 import Head from 'next/head'
 import { FC, useEffect, useState } from 'react'
-import axios from 'axios';
 import {useRouter} from 'next/router';
 import Loader from '../../../../components/loader';
 import CardFull from '../../../../components/cardFull';
 import Title from '../../../../components/title';
 import Separator from '../../../../components/separator';
-import PodcastTable from '../../../../components/podcastTable';
-import {API_URL_PODCAST_EPISODES, CORS_HELPER} from '../../../../utils';
+import {isValidUrl} from '../../../../utils';
+import Link from 'next/link';
 
 export const Episode: FC<{}> = ({}) => {
   const [isLoading, setIsLoading] = useState(true);
   const [podcast, setPodcast]:any = useState(null)
-  const [podcastList, setPodcastList]:any = useState([]);
+  const [episode, setEpisode]:any = useState(null);
   const router = useRouter();
-  const {podcastId} = router.query;
+  const {podcastId, episodeId} = router.query;
+  
 
   useEffect(() => {
-    const fetchData = async () => {
-      const url = encodeURIComponent(`${API_URL_PODCAST_EPISODES}${podcastId}`);
-      const requestUrl = `${CORS_HELPER}${url}`;
-      console.log('requestUrl: ', requestUrl);
-      const result = await axios.get(requestUrl);
-      const contents = JSON.parse(result.data.contents);
-      setPodcastList(contents.results);
-      setIsLoading(false);
-    };
-    if (podcastId) {
-      const allPodcasts = JSON.parse(localStorage.podcasts);
-      const currentPodcast = allPodcasts.find((podcast: any) => podcast.id.attributes['im:id'] === podcastId);
-      console.log('currentPodcast: ', currentPodcast);
+    if (podcastId && episodeId) {
+      const currentPodcast = JSON.parse(localStorage.getItem(`podcast_${podcastId}`) || '');
       setPodcast(currentPodcast);
-      fetchData();
+      const currentPodcastList = JSON.parse(localStorage.getItem(`podcastList_${podcastId}`) || '');
+      const currentEpisode = currentPodcastList.find((episode: any) => episode.trackId.toString() === episodeId);
+      
+      setEpisode(currentEpisode);
+      setIsLoading(false);
     } else {
       router.push('/');
     }
-  }, [podcastId, router]);
+  }, [podcastId, episodeId, router]);
 
   return (
     <>
@@ -51,7 +44,8 @@ export const Episode: FC<{}> = ({}) => {
         <Separator />
         <div className='layout'>
           <section className='podcast'>
-            <CardFull 
+            <CardFull
+              podcastId={podcastId?.toString() || ''} 
               name={podcast ? podcast['im:name'].label : ''}
               image={podcast ? podcast['im:image'][2].label : ''}
               author={podcast ? podcast['im:artist'].label : ''}
@@ -59,13 +53,22 @@ export const Episode: FC<{}> = ({}) => {
             />
           </section>
           {
-            podcastList.length > 0 && (
-              <div>
-                <h2 className='title'>{`Episodes: ${podcastList.length}`}</h2>
-                <PodcastTable 
-                  podcastList={podcastList}
-                  podcastId={podcastId}
-                />
+            episode && 
+            (
+              <div className='episode'>
+                <h2 className='title'>{episode.trackName}</h2>
+                <div className='description'>
+                  {
+                    episode.description && episode.description.split(/\r?\n|\r|\n/g).map((line: string, index: number) => (
+                      <p key={index}>{
+                        isValidUrl(line) ? <Link className='link' href={line} target="_blank" rel="noreferrer"><span className='link--text'>{line}</span></Link> :line
+                      }</p>
+                    ))
+                  }
+                </div>
+                <audio controls className='audio'>
+                  <source src={episode.episodeUrl} type="audio/mpeg" />
+                </audio>
               </div>
             )
           }
@@ -73,24 +76,35 @@ export const Episode: FC<{}> = ({}) => {
       </main>
       <style jsx>{`
         .layout {
-          display: grid;
-          grid-template-columns: repeat(2, auto);
-          grid-gap: 3rem;
+          display: flex;
+          flex-direction: row;
+          flex-wrap: nowrap;
           margin: 1rem 0;
         }
-        .title {
+        .podcast {
+          margin-right: 2rem;
+        }
+        .episode {
           box-shadow: 0 0 10px rgba(0,0,0,0.1);
           padding: 1rem;
-          margin: 0 0 1rem 0;
           border-radius: 0.5rem;
+        }
+        .link--text {
+          color: var(--primary-color);
+        }
+        .audio {
+          width: 100%;
+          margin: 1rem 0;
         }
         @media (max-width: 768px) {
           .podcast {
             display: flex;
             justify-content: center;
+            margin: 0 0 1rem 0;
           }
           .layout {
-            grid-template-columns: 1fr;
+            flex-direction: column;
+            flex-wrap: wrap;
           }
         }
       `}</style>

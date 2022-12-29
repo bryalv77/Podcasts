@@ -19,21 +19,30 @@ export const Podcast: FC<{}> = ({}) => {
 
   useEffect(() => {
     const fetchData = async () => {
+      const lastUpdatePodcastList = localStorage.getItem(`lastUpdatePodcastsList_${podcastId}`);
+      if (lastUpdatePodcastList && Date.now() - parseFloat(lastUpdatePodcastList) <= 1000 * 60 * 60 * 24) {
+        setPodcastList(JSON.parse(localStorage.getItem(`podcastList_${podcastId}`) || ''));
+        setIsLoading(false);
+        return;
+      }
       const url = encodeURIComponent(`${API_URL_PODCAST_EPISODES}${podcastId}`);
       const requestUrl = `${CORS_HELPER}${url}`;
-      console.log('requestUrl: ', requestUrl);
       const result = await axios.get(requestUrl);
       const contents = JSON.parse(result.data.contents);
-      setPodcastList(contents.results);
+      const podcastList = contents.results;
+      localStorage.setItem(`podcastList_${podcastId}`, JSON.stringify(podcastList));
+      localStorage.setItem(`lastUpdatePodcastsList_${podcastId}`, Date.now().toString());
+      setPodcastList(podcastList);
       setIsLoading(false);
     };
-    if (podcastId) {
+    try {
       const allPodcasts = JSON.parse(localStorage.podcasts);
       const currentPodcast = allPodcasts.find((podcast: any) => podcast.id.attributes['im:id'] === podcastId);
-      console.log('currentPodcast: ', currentPodcast);
+      localStorage.setItem(`podcast_${podcastId}`, JSON.stringify(currentPodcast));
+      localStorage.setItem(`lastUpdatePodcast_${podcastId}`, Date.now().toString());
       setPodcast(currentPodcast);
       fetchData();
-    } else {
+    } catch (e) {
       router.push('/');
     }
   }, [podcastId, router]);
@@ -51,7 +60,8 @@ export const Podcast: FC<{}> = ({}) => {
         <Separator />
         <div className='layout'>
           <section className='podcast'>
-            <CardFull 
+            <CardFull
+              podcastId={podcastId?.toString() || ''}
               name={podcast ? podcast['im:name'].label : ''}
               image={podcast ? podcast['im:image'][2].label : ''}
               author={podcast ? podcast['im:artist'].label : ''}
@@ -59,7 +69,7 @@ export const Podcast: FC<{}> = ({}) => {
             />
           </section>
           {
-            podcastList.length > 0 && (
+            podcastList && podcastList.length > 0 && (
               <div>
                 <h2 className='title'>{`Episodes: ${podcastList.length}`}</h2>
                 <PodcastTable 
