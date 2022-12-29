@@ -1,34 +1,30 @@
-/* eslint-disable @next/next/no-img-element */
 import Head from 'next/head'
 import { FC, useEffect, useState } from 'react'
-import {useRouter} from 'next/router';
-import Loader from '../../../../components/loader';
-import CardFull from '../../../../components/cardFull';
-import Title from '../../../../components/title';
-import Separator from '../../../../components/separator';
-import {isValidUrl} from '../../../../utils';
-import Link from 'next/link';
+import { useRouter } from 'next/router';
+import Loader from '../../../../components/Loader';
+import CardFull from '../../../../components/CardFull';
+import CardEpisode from '../../../../components/CardEpisode';
+import Nav from '../../../../components/Nav';
 
-export const Episode: FC<{}> = ({}) => {
+export const Episode: FC = () => {
   const [isLoading, setIsLoading] = useState(true);
-  const [podcast, setPodcast]:any = useState(null)
-  const [episode, setEpisode]:any = useState(null);
+  const [podcast, setPodcast]: any = useState(null)
+  const [episode, setEpisode]: any = useState(null);
   const router = useRouter();
-  const {podcastId, episodeId} = router.query;
-  
+  const { podcastId, episodeId } = router.query;
 
   useEffect(() => {
-    if (podcastId && episodeId) {
-      const currentPodcast = JSON.parse(localStorage.getItem(`podcast_${podcastId}`) || '');
-      setPodcast(currentPodcast);
-      const currentPodcastList = JSON.parse(localStorage.getItem(`podcastList_${podcastId}`) || '');
-      const currentEpisode = currentPodcastList.find((episode: any) => episode.trackId.toString() === episodeId);
-      
-      setEpisode(currentEpisode);
-      setIsLoading(false);
-    } else {
-      router.push('/');
+    const getDataFromLocalStorage = () => {
+      const currentPodcast = localStorage[`podcast_${podcastId}`];
+      const currentPodcastList = localStorage[`podcastList_${podcastId}`];
+      if (currentPodcast && currentPodcastList && currentPodcast !== 'undefined' && currentPodcastList !== 'undefined') {
+        setPodcast(JSON.parse(currentPodcast || ''));
+        const currentEpisode = JSON.parse(currentPodcastList || '').find((episode: any) => episode.trackId.toString() === episodeId);
+        setEpisode(currentEpisode);
+        setIsLoading(false);
+      }
     }
+    getDataFromLocalStorage();
   }, [podcastId, episodeId, router]);
 
   return (
@@ -37,15 +33,17 @@ export const Episode: FC<{}> = ({}) => {
         isLoading && <Loader />
       }
       <Head>
-        <title>Podcaster | {podcast ? podcast['im:name'].label : ''}</title>
+        <title>{podcast ? episode ? `Podcaster | ${podcast['im:name'].label} | ${episode.trackName}` : 'Podcaster': 'Podcaster'}</title>
       </Head>
       <main className="main">
-        <Title title="Podcaster"></Title>
-        <Separator />
+        <Nav
+          title="Podcaster"
+          isLoading={isLoading}
+        />
         <div className='layout'>
           <section className='podcast'>
             <CardFull
-              podcastId={podcastId?.toString() || ''} 
+              podcastId={podcastId?.toString() || ''}
               name={podcast ? podcast['im:name'].label : ''}
               image={podcast ? podcast['im:image'][2].label : ''}
               author={podcast ? podcast['im:artist'].label : ''}
@@ -53,23 +51,12 @@ export const Episode: FC<{}> = ({}) => {
             />
           </section>
           {
-            episode && 
-            (
-              <div className='episode'>
-                <h2 className='title'>{episode.trackName}</h2>
-                <div className='description'>
-                  {
-                    episode.description && episode.description.split(/\r?\n|\r|\n/g).map((line: string, index: number) => (
-                      <p key={index}>{
-                        isValidUrl(line) ? <Link className='link' href={line} target="_blank" rel="noreferrer"><span className='link--text'>{line}</span></Link> :line
-                      }</p>
-                    ))
-                  }
-                </div>
-                <audio controls className='audio'>
-                  <source src={episode.episodeUrl} type="audio/mpeg" />
-                </audio>
-              </div>
+            episode && (
+              <CardEpisode
+                trackName={episode?.trackName || ''}
+                description={episode?.description || ''}
+                episodeUrl={episode?.episodeUrl || ''}
+              />
             )
           }
         </div>
@@ -83,18 +70,6 @@ export const Episode: FC<{}> = ({}) => {
         }
         .podcast {
           margin-right: 2rem;
-        }
-        .episode {
-          box-shadow: 0 0 10px rgba(0,0,0,0.1);
-          padding: 1rem;
-          border-radius: 0.5rem;
-        }
-        .link--text {
-          color: var(--primary-color);
-        }
-        .audio {
-          width: 100%;
-          margin: 1rem 0;
         }
         @media (max-width: 768px) {
           .podcast {

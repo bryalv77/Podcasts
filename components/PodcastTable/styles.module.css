@@ -1,0 +1,38 @@
+.table {
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  padding: 1rem;
+  border-radius: 0.5rem;
+}
+
+.th--title {
+  font-weight: bold;
+  color: #000;
+  width: calc(100% - 11.25rem);
+}
+
+.th--cell {
+  font-weight: bold;
+  width: 5.625rem;
+}
+
+.row {
+  display: flex;
+  flex-direction: row;
+  border-bottom: 1px solid #ccc;
+  padding: 1rem 0;
+}
+
+
+@media (max-width: 768px) {
+  .row {
+    font-size: 0.8rem;
+  }
+
+  .th--title {
+    width: calc(100% - 140rem);
+  }
+
+  .th--cell {
+    width: 70rem;
+  }
+}

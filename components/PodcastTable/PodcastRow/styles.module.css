@@ -1,0 +1,33 @@
+.row {
+  display: flex;
+  flex-direction: row;
+  border-bottom: 1px solid #ccc;
+  padding: 1rem 0;
+}
+
+.cell--title {
+  width: calc(100% - 11.25rem);
+}
+
+.cell--title__text {
+  color: var(--primary-color);
+}
+
+.cell {
+  text-align: center;
+  width: 5.625rem;
+}
+
+@media (max-width: 768px) {
+  .row {
+    font-size: 0.8rem;
+  }
+
+  .cell--title {
+    width: calc(100% - 140rem);
+  }
+
+  .cell {
+    width: 70rem;
+  }
+}

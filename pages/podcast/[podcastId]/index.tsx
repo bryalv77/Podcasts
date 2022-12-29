@@ -1,27 +1,31 @@
-/* eslint-disable @next/next/no-img-element */
 import Head from 'next/head'
 import { FC, useEffect, useState } from 'react'
 import axios from 'axios';
-import {useRouter} from 'next/router';
-import Loader from '../../../components/loader';
-import CardFull from '../../../components/cardFull';
-import Title from '../../../components/title';
-import Separator from '../../../components/separator';
-import PodcastTable from '../../../components/podcastTable';
-import {API_URL_PODCAST_EPISODES, CORS_HELPER} from '../../../utils';
+import { useRouter } from 'next/router';
+import Loader from '../../../components/Loader';
+import CardFull from '../../../components/CardFull';
+import PodcastTable from '../../../components/PodcastTable';
+import Nav from '../../../components/Nav';
+import { API_URL_PODCAST_EPISODES, CORS_HELPER } from '../../../utils';
 
-export const Podcast: FC<{}> = ({}) => {
+export const Podcast: FC = () => {
   const [isLoading, setIsLoading] = useState(true);
-  const [podcast, setPodcast]:any = useState(null)
-  const [podcastList, setPodcastList]:any = useState([]);
+  const [podcast, setPodcast]: any = useState(null)
+  const [podcastList, setPodcastList]: any = useState([]);
   const router = useRouter();
-  const {podcastId} = router.query;
+  const { podcastId } = router.query;
 
   useEffect(() => {
     const fetchData = async () => {
-      const lastUpdatePodcastList = localStorage.getItem(`lastUpdatePodcastsList_${podcastId}`);
-      if (lastUpdatePodcastList && Date.now() - parseFloat(lastUpdatePodcastList) <= 1000 * 60 * 60 * 24) {
-        setPodcastList(JSON.parse(localStorage.getItem(`podcastList_${podcastId}`) || ''));
+      const lastUpdatePodcastList = localStorage[`lastUpdatePodcastsList_${podcastId}`];
+      let podcastList = localStorage[`podcastList_${podcastId}`];
+      if (
+        lastUpdatePodcastList &&
+        Date.now() - parseFloat(lastUpdatePodcastList) <= 1000 * 60 * 60 * 24 &&
+        podcastList &&
+        podcastList !== 'undefined'
+      ) {
+        setPodcastList(JSON.parse(podcastList));
         setIsLoading(false);
         return;
       }
@@ -29,7 +33,7 @@ export const Podcast: FC<{}> = ({}) => {
       const requestUrl = `${CORS_HELPER}${url}`;
       const result = await axios.get(requestUrl);
       const contents = JSON.parse(result.data.contents);
-      const podcastList = contents.results;
+      podcastList = contents.results;
       localStorage.setItem(`podcastList_${podcastId}`, JSON.stringify(podcastList));
       localStorage.setItem(`lastUpdatePodcastsList_${podcastId}`, Date.now().toString());
       setPodcastList(podcastList);
@@ -43,6 +47,7 @@ export const Podcast: FC<{}> = ({}) => {
       setPodcast(currentPodcast);
       fetchData();
     } catch (e) {
+      console.log('e: ', e);
       router.push('/');
     }
   }, [podcastId, router]);
@@ -53,11 +58,13 @@ export const Podcast: FC<{}> = ({}) => {
         isLoading && <Loader />
       }
       <Head>
-        <title>Podcaster | {podcast ? podcast['im:name'].label : ''}</title>
+        <title>{podcast ? `Podcaster | ${podcast['im:name'].label}` : 'Podcaster'}</title>
       </Head>
       <main className="main">
-        <Title title="Podcaster"></Title>
-        <Separator />
+        <Nav
+          title="Podcaster"
+          isLoading={isLoading}
+        />
         <div className='layout'>
           <section className='podcast'>
             <CardFull
@@ -72,9 +79,9 @@ export const Podcast: FC<{}> = ({}) => {
             podcastList && podcastList.length > 0 && (
               <div>
                 <h2 className='title'>{`Episodes: ${podcastList.length}`}</h2>
-                <PodcastTable 
+                <PodcastTable
                   podcastList={podcastList}
-                  podcastId={podcastId}
+                  podcastId={podcastId?.toString() || ''}
                 />
               </div>
             )

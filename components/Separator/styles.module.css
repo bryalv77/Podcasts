@@ -1,0 +1,12 @@
+.separator {
+  width: 67.5rem;
+  height: 1px;
+  background-color: var(--primary-color);
+  margin: 1rem 0;
+}
+
+@media (max-width: 67.5rem) {
+  .separator {
+    width: 100%;
+  }
+}

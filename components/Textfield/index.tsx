@@ -1,4 +1,5 @@
 import { FC } from 'react'
+import styles from './styles.module.css';
 
 const Textfield: FC<{
   onChange: (e: any) => void,
@@ -11,26 +12,14 @@ const Textfield: FC<{
   value,
   placeholder
 }) => (
-  <>
-    <input 
+    <input
       placeholder={placeholder}
-      className="textfield"
+      className={styles.textfield}
       type="text"
       onChange={onChange}
       value={value}
-      onKeyUp={onKeyUp} 
+      onKeyUp={onKeyUp}
     />
-    <style jsx>{`
-      .textfield {
-        background-color: #FFF;
-        border: 1px solid var(--primary-color);
-        font-size: 1rem;
-        padding: 0.5rem;
-        margin: 0.5rem;
-        border-radius: 0.5rem;
-      }
-    `}</style>
-  </>
-)
+  )
 
 export default Textfield;

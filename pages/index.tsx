@@ -1,21 +1,18 @@
-/* eslint-disable @next/next/no-img-element */
 import Head from 'next/head'
 import { useEffect, useState } from 'react'
-import Title from '../components/title'
 import axios from 'axios';
-import Separator from '../components/separator';
-import Card from '../components/card';
-import Link from 'next/link';
+import Card from '../components/Card';
+import Textfield from '../components/Textfield';
+import Loader from '../components/Loader';
+import Nav from '../components/Nav';
 import { rem, PODCASTS_LIST_URL_API } from '../utils';
-import Textfield from '../components/textfield';
-import Loader from '../components/loader';
 
 
 export default function Podcasts() {
-  const [podcasts, setPodcasts]:any = useState([]);
+  const [podcasts, setPodcasts]: any = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [searchText, setSearchText]:any = useState('');
-  
+  const [searchText, setSearchText]: any = useState('');
+
   useEffect(() => {
     const fetchData = async () => {
       if (localStorage.podcasts && Date.now() - localStorage.lastUpdatePodcasts <= 1000 * 60 * 60 * 24) {
@@ -56,14 +53,16 @@ export default function Podcasts() {
         isLoading && <Loader />
       }
       <main className="main">
-        <Title title="Podcaster" />
-        <Separator />
+        <Nav
+          title="Podcaster"
+          isLoading={isLoading}
+        />
         <div className="filter">
           <div className="filter--count">
             {podcasts.length}
           </div>
           <Textfield
-            placeholder="Filter podcasts..." 
+            placeholder="Filter podcasts..."
             value={searchText}
             onChange={handleSearchText}
           />
@@ -72,17 +71,13 @@ export default function Podcasts() {
           {
             podcasts.map((podcast: any) => {
               return (
-                <Link 
-                  href={`/podcast/${podcast.id.attributes['im:id']}`} 
-                  key={podcast.id.attributes['im:id']} 
-                  className="link"
-                >
-                  <Card 
-                    title={podcast['im:name'].label}
-                    description={podcast['im:artist'].label}
-                    image={podcast['im:image'][2].label}
-                  />
-                </Link>
+                <Card
+                  key={podcast.id.attributes['im:id']}
+                  podcastId={podcast.id.attributes['im:id']}
+                  title={podcast['im:name'].label}
+                  description={podcast['im:artist'].label}
+                  image={podcast['im:image'][2].label}
+                />
               )
             })
           }
