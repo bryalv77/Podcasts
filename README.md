@@ -2,7 +2,7 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 
 ## Getting Started
 
-First, run the development server:
+After installing the dependences, run the development server:
 
 ```bash
 npm run dev
@@ -13,6 +13,17 @@ yarn dev
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
 You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+
+## To build
+
+```bash
+npm run build
+# or
+yarn build
+```
+## To test the app
+
+Visit [https://bryalv77.github.io/podcasts](https://bryalv77.github.io/podcasts)
 
 ## Learn More
 
