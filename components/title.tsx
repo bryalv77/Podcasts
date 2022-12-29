@@ -8,11 +8,13 @@ const Title: FC<{title: string}> = ({title}) => {
      <style jsx>{`
         .title {
           display: flex;
-          font-weight: bold
+          font-weight: bold;
           justify-content: flex-start;
           align-items: flex-start;
-          color: #3e7299;
+          color: var(--primary-color);
           font-size: 2rem;
+          margin: 1rem 0;
+          line-height: 0;
         }
       `}</style>
     </>

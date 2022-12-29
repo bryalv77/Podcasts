@@ -1,6 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 
 import { FC } from 'react'
+import {rem} from '../utils';
 const Card: FC<{title: string, description: string, image: string}> = ({title, description, image}) => {
   return (
     <>
@@ -26,14 +27,15 @@ const Card: FC<{title: string, description: string, image: string}> = ({title, d
         .card--title {
           font-weight: bold;
           color: #000000;
-          text-decoration: none;
           text-transform: uppercase;
           text-align: center;
+          text-decoration: none;
         }
         .card--subtitle {
           color: #a1a1a1;
           text-align: center;
           margin-top: 0;
+          text-decoration: none;
         }
       `}</style>
     </>

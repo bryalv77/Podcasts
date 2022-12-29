@@ -3,29 +3,36 @@ import { FC } from 'react'
 const Loader: FC = () => {
   return (
     <>
-     <div className='wrapper'>
-      <div className="spinner"></div>
-     </div>
-     <style jsx>{`
-        .wrapper {
-          position: absolute;
-          top: calc(50% - 25px);
-          left: calc(50% - 25px);
-        }
-        .spinner {
-          width: 50px;
-          height: 50px;
-          border: 5px solid #3e7299;
-          border-radius: 50%;
-          border-top-color: transparent;
-          animation: spin 1s linear infinite;
-        }
-        @keyframes spin {
-          to {
-            transform: rotate(360deg);
+      <div className='wrapper'>
+        <div className="spinner"></div>
+      </div>
+      <style jsx>{`
+          .wrapper {
+            background-color: rgba(0, 0, 0, 0.5);
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 999;
           }
-        }
-      `}</style>
+          .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid var(--primary-color);
+            border-radius: 50%;
+            border-top-color: transparent;
+            animation: spin 1s linear infinite;
+            position: absolute;
+            top: calc(50% - 25px);
+            left: calc(50% - 25px);
+          }
+          @keyframes spin {
+            to {
+              transform: rotate(360deg);
+            }
+          }
+        `}</style>
     </>
   )
 }

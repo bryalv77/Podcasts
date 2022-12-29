@@ -1,4 +1,5 @@
 import { FC } from 'react'
+import rem from '../utils';
 
 const Separator: FC = () => {
 
@@ -7,10 +8,15 @@ const Separator: FC = () => {
      <div className='separator'></div>
      <style jsx>{`
         .separator {
-          width: 100%;
+          width: ${rem(1080)};
           height: 1px;
-          background-color: #3e7299;
+          background-color: var(--primary-color);
           margin: 1rem 0;
+        }
+        @media (max-width: 1080px) {
+          .separator {
+            width: 100%;
+          }
         }
       `}</style>
     </>
