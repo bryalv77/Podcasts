@@ -14,7 +14,7 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
 
-## To build an static compiled front
+## To build an static compiled front and export it to out folder
 
 ```bash
 npm run export

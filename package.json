@@ -4,8 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "./node_modules/.bin/next dev",
-    "export": "./node_modules/.bin/next export",
     "build": "./node_modules/.bin/next build",
+    "export": "./node_modules/.bin/next build && ./node_modules/.bin/next export",
     "start": "./node_modules/.bin/next start",
     "lint": "./node_modules/.bin/next lint"
   },
